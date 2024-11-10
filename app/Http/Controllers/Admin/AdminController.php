@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class AdminController extends Controller
 {
@@ -14,6 +15,19 @@ class AdminController extends Controller
             $data = $request->all();
 
             // echo "<pre>"; print_r($data); die;
+
+            $rules = [
+                'email' => 'required|email|max:255',
+                'password' => 'required'
+            ];
+
+            $customMsg = [
+                'email.required' => 'Email is required!',
+                'password.required' => 'Password is required!'
+            ];
+
+            $request->validate($rules, $customMsg);
+
             if (Auth::guard('admin')->attempt(['email'=>$data['email'], 'password'=>$data['password']])) {
                 return redirect('admin/dashboard');
             }
