@@ -29,6 +29,15 @@ class AdminController extends Controller
             $request->validate($rules, $customMsg);
 
             if (Auth::guard('admin')->attempt(['email'=>$data['email'], 'password'=>$data['password']])) {
+                // Set cookies
+                if (!empty($data['rememberMe']) && $data['rememberMe'] == 'on') {
+                    setcookie("email", $data['email'], time()+3600);
+                    setcookie("password", $data['password'], time()+3600);
+                } else {
+                    setcookie("email", "");
+                    setcookie("password", "");
+                }
+
                 return redirect('admin/dashboard');
             }
 
