@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>E-Commerce | Dashboard</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -59,12 +60,8 @@ to get the desired effect
     <!-- AdminLTE -->
     <script src="{{ asset('admin/js/adminlte.js') }}"></script>
 
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="{{ asset('admin/plugins/chart.js/Chart.min.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('admin/js/demo.js') }}"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('admin/js/pages/dashboard3.js') }}"></script>
+    {{-- Custom JS --}}
+    @vite(["resources/js/custom.js"])
 </body>
 
 </html>

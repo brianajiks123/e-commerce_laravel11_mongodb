@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -41,7 +42,7 @@ class AdminController extends Controller
                 return redirect('admin/dashboard');
             }
 
-            return redirect()->back()->with('error_message', 'Invalid email or password');
+            return redirect()->back()->with('error_message', 'Invalid email or password.');
         }
 
         return view('admin.login');
@@ -52,6 +53,46 @@ class AdminController extends Controller
         Auth::guard('admin')->logout();
 
         return redirect('admin/login');
+    }
+
+    // Update Password
+    public function updatePassword(Request $request) {
+        if ($request->isMethod("post")) {
+            $data = $request->input();
+
+            // Check Current Password
+            if (Hash::check($data["currPassword"], Auth::guard("admin")->user()->password)) {
+                // Check New & Confirm Password
+                if ($data["newPassword"] == $data["confirmPassword"]) {
+                    Admin::where("email", Auth::guard("admin")->user()->email)->update([
+                        "password" => bcrypt($data["newPassword"])
+                    ]);
+
+                    return redirect()->back()->with('success_message', 'Success to updating password.');
+                } else {
+                    return redirect()->back()->with('error_message', 'Your password is not match.');
+                }
+            } else {
+                return redirect()->back()->with('error_message', 'Your current password is incorrect.');
+            }
+        }
+
+        return view('admin.update_password');
+    }
+
+    // Check Current Password
+    public function checkCurrPassword(Request $request) {
+        $data = $request->all();
+
+        if (Hash::check($data["curr_passwd"], Auth::guard("admin")->user()->password)) {
+            $check = "valid";
+
+            return $check;
+        } else {
+            $check = "wrong";
+
+            return $check;
+        }
     }
 
     // Dashboard

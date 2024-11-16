@@ -14,20 +14,7 @@
                 <img src="{{ asset('admin/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
-            </div>
-        </div>
-
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                    aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
+                <a href="#" class="d-block">{{ Auth::guard('admin')->user()->name }}</a>
             </div>
         </div>
 
@@ -36,43 +23,43 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                <li class="nav-item">
+                    <a href="{{ url('admin/dashboard') }}" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
                         <p>
                             Dashboard
+                            {{-- <span class="right badge badge-danger">New</span> --}}
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link active">
+                        <i class="nav-icon fas fa-user-alt"></i>
+                        <p>
+                            Admin Management
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link">
+                            <a href="{{ url('admin/update-password') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard v1</p>
+                                <p>Update Password</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="./index2.html" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard v2</p>
+                                <p>Update Details</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./index3.html" class="nav-link active">
+                            <a href="./index3.html" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard v3</p>
+                                <p>Sub-admins</p>
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="pages/widgets.html" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>
-                            Widgets
-                            <span class="right badge badge-danger">New</span>
-                        </p>
-                    </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
