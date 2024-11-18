@@ -42,7 +42,9 @@
                         </p>
                     </a>
                 </li>
-                @if (Session::get('page') == 'update-password' || Session::get('page') == 'update-admin-details' || Session::get('page') == 'subadmins')
+                @if (Session::get('page') == 'update-password' ||
+                        Session::get('page') == 'update-admin-details' ||
+                        Session::get('page') == 'subadmins')
                     @php
                         $active = 'active';
                     @endphp
@@ -100,9 +102,44 @@
                             @endphp
                         @endif
                         <li class="nav-item">
-                            <a href="./index3.html" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Sub-admins</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @if (Session::get('page') == 'cms-pages')
+                    @php
+                        $active = 'active';
+                    @endphp
+                @else
+                    @php
+                        $active = '';
+                    @endphp
+                @endif
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link {{ $active }}">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>
+                            Pages Management
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @if (Session::get('page') == 'update-password')
+                            @php
+                                $active = 'active';
+                            @endphp
+                        @else
+                            @php
+                                $active = '';
+                            @endphp
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ url('admin/cms-pages') }}" class="nav-link {{ $active }}">
+                                <i class="nav-icon fas fa-copy"></i>
+                                <p>CMS Pages</p>
                             </a>
                         </li>
                     </ul>

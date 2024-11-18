@@ -27,6 +27,7 @@
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
 
+                <!-- Display Session Messages -->
                 @if (Session::has('error_message'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Error!</strong> {{ Session::get('error_message') }}
@@ -46,6 +47,7 @@
                     </div>
                 @endif
 
+                <!-- Form Start -->
                 <form action="{{ url('admin/login') }}" method="post">
                     @csrf
 

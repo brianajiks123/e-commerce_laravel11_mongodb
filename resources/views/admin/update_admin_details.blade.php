@@ -26,13 +26,14 @@
                 <div class="row">
                     <!-- left column -->
                     <div class="col-md">
-                        <!-- general form elements -->
+                        <!-- General Form Elements -->
                         <div class="card card-primary">
                             <div class="card-header">
                                 <h3 class="card-title">Update Admin Details</h3>
                             </div>
                             <!-- /.card-header -->
 
+                            <!-- Display Session Messages -->
                             @if (Session::has('error_message'))
                                 <div class="alert alert-danger alert-dismissible fade show mt-3 mx-3" role="alert">
                                     <strong>Error!</strong> {{ Session::get('error_message') }}
@@ -41,6 +42,7 @@
                                     </button>
                                 </div>
                             @endif
+
                             @if (Session::has('success_message'))
                                 <div class="alert alert-success alert-dismissible fade show mt-3 mx-3" role="alert">
                                     {{ Session::get('success_message') }}
@@ -63,7 +65,7 @@
                                 </div>
                             @endif
 
-                            <!-- form start -->
+                            <!-- Form Start -->
                             <form method="POST" action="{{ url('admin/update-admin-details') }}"
                                 enctype="multipart/form-data">
                                 @csrf

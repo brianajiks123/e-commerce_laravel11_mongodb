@@ -7,31 +7,28 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Admin Management</h1>
-                    </div><!-- /.col -->
+                        <h1 class="m-0">Pages Management</h1>
+                    </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Update Password</li>
+                            <li class="breadcrumb-item active">{{ $title }}</li>
                         </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.content-header -->
 
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <!-- left column -->
                     <div class="col-md">
                         <!-- General Form Elements -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Update Password</h3>
+                                <h3 class="card-title">{{ $title }}</h3>
                             </div>
-                            <!-- /.card-header -->
 
                             <!-- Display Session Messages -->
                             @if (Session::has('error_message'))
@@ -53,56 +50,45 @@
                             @endif
 
                             @if ($errors->any())
-                                <div class="alert alert-danger">
+                                <div class="alert alert-danger alert-dismissible fade show mt-3 mx-3" role="alert">
                                     <ul>
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             @endif
 
                             <!-- Form Start -->
-                            <form method="POST" action="{{ url('admin/update-password') }}">
+                            <form method="POST"
+                                action="{{ empty($cms_page['id']) ? url('admin/add-edit-cms-page') : url('admin/add-edit-cms-page/' . $cms_page['id']) }}"
+                                name="cmsPageForm" id="cms_page_form">
                                 @csrf
-
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label for="curr_email">Email address</label>
-                                        <input class="form-control" id="curr_email"
-                                            value="{{ Auth::guard('admin')->user()->email }}" readonly>
+                                        <label for="curr_title">Title <span class="text-danger">*</span></label>
+                                        <input type="text" name="title" class="form-control" id="curr_title"
+                                            placeholder="Enter Title" value="{{ old('title', $cms_page['title'] ?? '') }}">
                                     </div>
+
                                     <div class="form-group">
-                                        <label for="curr_password">Current Password</label>
-                                        <input type="password" name="currPassword" class="form-control" id="curr_password"
-                                            placeholder="Current Password">
-                                        <span id="verifyCurrPassword"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="new_password">New Password</label>
-                                        <input type="password" name="newPassword" class="form-control" id="new_password"
-                                            placeholder="New Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirm_password">Confirm Password</label>
-                                        <input type="password" name="confirmPassword" class="form-control"
-                                            id="confirm_password" placeholder="Confirm Password">
+                                        <label for="curr_description">Description <span class="text-danger">*</span></label>
+                                        <textarea name="description" id="curr_description" rows="3" class="form-control" placeholder="Enter ...">{{ old('description', $cms_page['description'] ?? '') }}</textarea>
                                     </div>
                                 </div>
-                                <!-- /.card-body -->
 
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary">Submit</button>
+                                    <a href="{{ url('admin/cms-pages') }}" class="btn btn-secondary">Back</a>
                                 </div>
                             </form>
                         </div>
-                        <!-- /.card -->
                     </div>
-                    <!--/.col (left) -->
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
-        <!-- /.content -->
     </div>
 @endsection
