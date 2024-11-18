@@ -7,6 +7,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Intervention\Image\ImageManagerStatic as Image;
 class AdminController extends Controller
 {
@@ -57,6 +58,8 @@ class AdminController extends Controller
 
     // Update Password
     public function updatePassword(Request $request) {
+        Session::put("page", "update-password");
+
         if ($request->isMethod("post")) {
             $data = $request->input();
 
@@ -97,6 +100,8 @@ class AdminController extends Controller
 
     // Update Admin Details
     public function updateAdminDetails(Request $request) {
+        Session::put("page", "update-admin-details");
+
         if ($request->isMethod("post")) {
             $data = $request->all();
 
@@ -153,6 +158,8 @@ class AdminController extends Controller
 
     // Dashboard
     public function dashboard() {
+        Session::put("page", "dashboard");
+
         return view('admin.dashboard');
     }
 }
