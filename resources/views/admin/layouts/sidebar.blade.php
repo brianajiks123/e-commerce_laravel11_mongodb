@@ -102,7 +102,7 @@
                             @endphp
                         @endif
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('admin/subadmins') }}" class="nav-link {{ $active }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Sub-admins</p>
                             </a>

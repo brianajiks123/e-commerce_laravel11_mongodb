@@ -4,14 +4,14 @@ window.Swal = swal;
 $().ready(function() {
     // Check Correct Admin Password
     $("#curr_password").on("change", function() {
-        var curr_passwd = $("#curr_password").val();
+        var currPasswd = $("#curr_password").val();
 
         $.ajax({
             type: "post",
             url: "/admin/check-curr-password",
             headers: {"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")},
             data: {
-                curr_passwd: curr_passwd,
+                curr_passwd: currPasswd,
             },
             success: function(res) {
                 if(res == "wrong") {
@@ -29,7 +29,7 @@ $().ready(function() {
     // Update CMS Page Status
     $(".update_cms_page_status").on("click", function() {
         var status = $(this).children("i").attr("status");
-        var page_id = $(this).attr("page_id");
+        var pageId = $(this).attr("page_id");
 
         $.ajax({
             type: "post",
@@ -37,13 +37,13 @@ $().ready(function() {
             headers: {"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")},
             data: {
                 status: status,
-                page_id: page_id,
+                page_id: pageId,
             },
             success: function(res) {
                 if(res["status"] == 0) {
-                    $("#page-" + page_id).html("<i class='fas fa-toggle-off' style='color:grey' aria-hidden='true' status='Inactive'></i>");
+                    $("#page-" + pageId).html("<i class='fas fa-toggle-off' style='color:grey' aria-hidden='true' status='Inactive'></i>");
                 } else if(res["status"] == 1) {
-                    $("#page-" + page_id).html("<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>");
+                    $("#page-" + pageId).html("<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>");
                 }
             },
             error: function() {
@@ -54,6 +54,52 @@ $().ready(function() {
 
     // Confirmation Delete CMS Page
     $(".confirm_cms_page_delete").on("click", function() {
+        var record = $(this).attr("record");
+        var recordId = $(this).attr("record_id");
+
+        Swal.fire({
+            title: "Are You Sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(result => {
+            if (result.isConfirmed) {
+                Swal.fire("Deleted!", "Your data has been deleted.", "success").then(() => window.location.href = `/admin/delete-${record}/${recordId}`);
+            }
+        });
+    });
+
+    // Update Subadmin Status
+    $(".update_subadmin_status").on("click", function() {
+        var status = $(this).children("i").attr("status");
+        var subadminId = $(this).attr("subadmin_id");
+
+        $.ajax({
+            type: "post",
+            url: "/admin/update-subadmin-status",
+            headers: {"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")},
+            data: {
+                status: status,
+                subadmin_id: subadminId,
+            },
+            success: function(res) {
+                if(res["status"] == 0) {
+                    $("#subadmin-" + subadminId).html("<i class='fas fa-toggle-off' style='color:grey' aria-hidden='true' status='Inactive'></i>");
+                } else if(res["status"] == 1) {
+                    $("#subadmin-" + subadminId).html("<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>");
+                }
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    });
+
+    // Confirmation Delete Subadmin
+    $(".confirm_subadmin_delete").on("click", function() {
         var record = $(this).attr("record");
         var recordId = $(this).attr("record_id");
 

@@ -67,6 +67,7 @@
                                 action="{{ empty($cms_page['id']) ? url('admin/add-edit-cms-page') : url('admin/add-edit-cms-page/' . $cms_page['id']) }}"
                                 name="cmsPageForm" id="cms_page_form">
                                 @csrf
+                                
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="curr_title">Title <span class="text-danger">*</span></label>

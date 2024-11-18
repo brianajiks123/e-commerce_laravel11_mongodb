@@ -17,12 +17,14 @@ class CmsController extends Controller
     {
         Session::put("page", "cms-pages");
 
+        $header = "CMS Pages";
+
         $cms_pages = CmsPage::get();
 
         // $cms_pages_json = json_decode(json_encode($cms_pages));
         // echo "<pre>"; print_r($cms_pages_json); die;
 
-        return view("admin.pages.cms_pages")->with(compact("cms_pages"));
+        return view("admin.pages.cms_pages")->with(compact("cms_pages", "header"));
     }
 
     /**
@@ -56,10 +58,12 @@ class CmsController extends Controller
     {
         if ($id == "") {
             $title = "Add CMS Page";
+            $header = $title;
             $cms_page = new CmsPage;
             $msg = "Success to adding CMS Page.";
         } else {
             $title = "Edit CMS Page";
+            $header = $title;
             $cms_page = CmsPage::find($id);
             $msg = "Success to updating CMS Page.";
         }
@@ -82,8 +86,8 @@ class CmsController extends Controller
             ];
 
             $customMsgs = [
-                "title.required" => "Title is required.",
-                "description.required" => "Description is required.",
+                "title.required" => "Title is required",
+                "description.required" => "Description is required",
             ];
 
             $request->validate($rules, $customMsgs);
@@ -97,7 +101,7 @@ class CmsController extends Controller
             return redirect("admin/cms-pages")->with("success_message", $msg);
         }
 
-        return view("admin.pages.add_edit_cms_page")->with(compact("title", "cms_page"));
+        return view("admin.pages.add_edit_cms_page")->with(compact("title", "header", "cms_page"));
     }
 
     /**

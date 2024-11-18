@@ -56,9 +56,20 @@ class AdminController extends Controller
         return redirect('admin/login');
     }
 
+    // Dashboard
+    public function dashboard() {
+        Session::put("page", "dashboard");
+
+        $header = "Dashboard";
+
+        return view('admin.dashboard', compact("header"));
+    }
+
     // Update Password
     public function updatePassword(Request $request) {
         Session::put("page", "update-password");
+
+        $header = "Update Password";
 
         if ($request->isMethod("post")) {
             $data = $request->input();
@@ -80,7 +91,7 @@ class AdminController extends Controller
             }
         }
 
-        return view('admin.update_password');
+        return view('admin.update_password', compact("header"));
     }
 
     // Check Current Password
@@ -102,6 +113,8 @@ class AdminController extends Controller
     public function updateAdminDetails(Request $request) {
         Session::put("page", "update-admin-details");
 
+        $header = "Update Admin Details";
+
         if ($request->isMethod("post")) {
             $data = $request->all();
 
@@ -120,6 +133,7 @@ class AdminController extends Controller
                 "currMobilePhone.numeric" => "Mobile Phone is not valid",
                 "adminImage.image" => "Image must be image file",
                 "adminImage.mimes" => "Image only jpg, png, or jpeg",
+                "adminImage.max" => "Image is very large. Please compress your image",
             ];
 
             $request->validate($rules, $customMsgs);
@@ -153,13 +167,135 @@ class AdminController extends Controller
             return redirect()->back()->with('success_message', 'Success to updating admin details.');
         }
 
-        return view('admin.update_admin_details');
+        return view('admin.update_admin_details', compact("header"));
     }
 
-    // Dashboard
-    public function dashboard() {
-        Session::put("page", "dashboard");
+    // Subadmin (Data)
+    public function subadmins() {
+        Session::put("page", "subadmins");
 
-        return view('admin.dashboard');
+        $header = "Subadmins";
+
+        $subadmins = Admin::where("type", "subadmin")->get();
+
+        return view('admin.subadmins.subadmins')->with(compact("subadmins", "header"));
+    }
+
+    // Subadmin (Add/Edit)
+    public function addEditSubadmin(Request $request, $id=null) {
+        if ($id == "") {
+            $title = "Add Subadmin";
+            $header = $title;
+            $subadmindata = new Admin;
+            $msg = "Success to adding Subadmin.";
+        } else {
+            $title = "Edit Subadmin";
+            $header = $title;
+            $subadmindata = Admin::find($id);
+            $msg = "Success to updating Subadmin.";
+        }
+
+        if ($request->isMethod("post")) {
+            $data = $request->all();
+
+            // echo "<pre>"; print_r($data); die;
+            
+            if ($id == "") {
+                $subadmin_count = Admin::where("email", $data["subadminEmail"])->count();
+
+                if ($subadmin_count > 0) {
+                    Session::flash("error_message", "Sub-admin already exists!");
+
+                    return redirect("admin/subadmins");
+                }
+            }
+
+            $rules = [
+                "subadminEmail" => "required|email",
+                "subadminName" => "required|regex:/^[\pL\s\-]+$/u",
+                "subadminMobile" => "required|numeric",
+                "subadminImage" => "image|mimes:jpg,png,jpeg|max:2048",
+            ];
+
+            $customMsgs = [
+                "subadminEmail.required" => "Email is required",
+                "subadminEmail.email" => "Email is not valid",
+                "subadminName.required" => "Name is required",
+                "subadmin_name.regex" => "Name is not valid",
+                "subadminMobile.required" => "Mobile Phone is required",
+                "subadminMobile.numeric" => "Mobile Phone is not valid",
+                "subadminImage.image" => "Image is not valid",
+                "subadminImage.mimes" => "Image only jpg, png, or jpeg",
+                "subadminImage.max" => "Image is very large. Please compress your image",
+            ];
+
+            $request->validate($rules, $customMsgs);
+
+            // Upload Image
+            if ($request->hasFile("subadminImage") && $request->file('subadminImage')->isValid()) {
+                $avatar = $request->file("subadminImage");
+
+                // Get Img Ext
+                $ext = $avatar->getClientOriginalExtension();
+
+                // Generate New Img Name
+                $img_name = rand(111, 99999).".".$ext;
+
+                // Read & Save Img
+                $destinationPath = public_path("admin/img/photos/" . $img_name);
+                Image::make(file_get_contents($avatar))->save($destinationPath);
+            } else if (!empty($data["subadminImage"])) {
+                $img_name = $data["subadminImage"];
+            } else {
+                $img_name = "";
+            }
+
+            $subadmindata->name = $data["subadminName"];
+            
+            if ($id == "") {
+                $subadmindata->type = "subadmin";
+                $subadmindata->email = $data["subadminEmail"];
+            }
+            
+            $subadmindata->mobile = $data["subadminMobile"];
+
+            if ($data["subadminPassword"] != "") {
+                $subadmindata->password = bcrypt($data["subadminPassword"]);
+            }
+
+            $subadmindata->image = $img_name;
+
+            $subadmindata->save();
+            
+            Session::flash("success_message", $msg);
+
+            return redirect("admin/subadmins");
+        }
+
+        return view("admin.subadmins.add_edit_subadmins")->with(compact("title", "header", "subadmindata"));
+    }
+
+    // Subadmin (Update)
+    public function updateSubadminStatus(Request $request) {
+        if ($request->ajax()) {
+            $data = $request->all();
+
+            if ($data['status'] == "Active") {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+
+            Admin::where("_id", $data["subadmin_id"])->update(["status" => $status]);
+
+            return response()->json(["status" => $status, "subadmin_id" => $data["subadmin_id"]]);
+        }
+    }
+
+    // Subadmin (Delete)
+    public function deleteSubadmin($id) {
+        Admin::where(["_id" => $id])->delete();
+
+        return redirect()->back()->with("success_message", "Success to deleting Subadmin.");
     }
 }

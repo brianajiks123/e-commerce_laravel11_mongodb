@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>E-Commerce | Dashboard</title>
+    <title>E-Commerce | {{ $header }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -66,6 +66,7 @@ to get the desired effect
     <script>
         $(function() {
             $("#cms_pages").DataTable();
+            $("#subadmins").DataTable();
         });
     </script>
     <!-- Select2 -->
